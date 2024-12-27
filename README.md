@@ -5,6 +5,7 @@ Add to the BOTTOM of your customScripts.lua
 as this little project isnt priority.
 
 require("custom.auroraStatBoard")
+
 require("custom.auroraStatFunc")
 
 
