@@ -1,5 +1,5 @@
 A scoreboard for public tes3mp servers.
-commands /sb to view board.
+command /sb to view board.
 
 Add to the BOTTOM of your customScripts.lua
 as this little project isnt priority.
