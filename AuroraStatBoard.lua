@@ -99,6 +99,7 @@ methods.auroraLevelUp = function(eventStatus, pid)
 	if levelUp == 1 then return
       end
       auroraData.totalPlayerLevelUps = auroraData.totalPlayerLevelUps + 1
+    saveData()
    end
 end
 customEventHooks.registerHandler("OnPlayerFaction", function(pid, eventStatus)
