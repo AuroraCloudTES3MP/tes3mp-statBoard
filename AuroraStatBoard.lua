@@ -10,6 +10,9 @@ require("custom.AuroraStatBoard")
 Credits
 -Aurora Cloud
 -Rickoff Polishing up and adding TotalPlayTime counter
+
+"Reimplemented original level up counter to fix server crash when
+a newly made character gets created
 ---------------------------
 command /sb to view server statistics
 ]]
@@ -35,6 +38,8 @@ end
 local function loadData()
 	auroraData = jsonInterface.load("custom/auroraDatabase.json")
 end
+
+local methods = {}
 
 local function GetTimePlayed(timer)
     local days = math.floor(timer / 86400)
@@ -87,13 +92,15 @@ customEventHooks.registerHandler("OnPlayerAuthentified", function(pid, eventStat
 	saveData()
 end)
 
-customEventHooks.registerHandler("OnPlayerLevel", function(pid, eventStatus)
-	local playerLevel = tes3mp.GetLevel(pid)
-	if playerLevel == 1 then return end
-	auroraData.totalPlayerLevelUps = auroraData.totalPlayerLevelUps + 1
-	saveData()
-end)
+methods.auroraLevelUp = function(eventStatus, pid)
 
+ if Players[pid] ~= nil and Players[pid]:IsLoggedIn() then
+	local levelUp = tes3mp.GetLevel(pid)
+	if levelUp == 1 then return
+      end
+      auroraData.totalPlayerLevelUps = auroraData.totalPlayerLevelUps + 1
+   end
+end
 customEventHooks.registerHandler("OnPlayerFaction", function(pid, eventStatus)
 	local action = tes3mp.GetFactionChangesAction(pid)       
 	if action == enumerations.faction.RANK then
@@ -124,4 +131,5 @@ customEventHooks.registerValidator("OnPlayerDisconnect", function(eventStatus, p
 	saveData()
 end)
 
+customEventHooks.registerHandler("OnPlayerLevel", methods.auroraLevelUp)
 customCommandHooks.registerCommand("sb", showMainMenu)
